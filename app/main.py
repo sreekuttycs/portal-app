@@ -1,9 +1,18 @@
 from fastapi import FastAPI
-from app.routers import user
+from app.admin.routers import user
+from app.admin.routers import member_type
+from app.admin.routers import member_role
+from app.admin.routers import country
+from app.admin.routers import currency
+
 
 app = FastAPI()
 
 app.include_router(user.router, prefix="/users", tags=["Users"])
+app.include_router(member_type.router, prefix="/member-types", tags=["Member Types"])
+app.include_router(member_role.router, prefix="/member-roles", tags=["Member Roles"])
+app.include_router(country.router, prefix="/countries", tags=["Countries"])
+app.include_router(currency.router, prefix="/currencies", tags=["Currencies"])
 
 @app.get("/")
 def root():
