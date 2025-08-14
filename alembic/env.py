@@ -11,6 +11,8 @@ from app.admin.models.member_type import MemberType
 from app.admin.models.member_role import MemberRole
 from app.admin.models.country import Country
 from app.admin.models.currency import Currency
+from app.admin.models.member import Member
+from app.admin.models.member_address import MemberAddress
 
 
 # this is the Alembic Config object, which provides
@@ -73,7 +75,7 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection, target_metadata=target_metadata, compare_type=True
         )
 
         with context.begin_transaction():
