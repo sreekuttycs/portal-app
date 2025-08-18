@@ -7,7 +7,7 @@ from app.admin.schemas.member_address import (
 )
 from typing import List
 
-router = APIRouter(prefix="/member_addresses", tags=["Member Addresses"])
+router = APIRouter(prefix="/member_addresses")
 
 def get_db():
     db = SessionLocal()

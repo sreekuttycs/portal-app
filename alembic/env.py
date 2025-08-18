@@ -13,6 +13,7 @@ from app.admin.models.country import Country
 from app.admin.models.currency import Currency
 from app.admin.models.member import Member
 from app.admin.models.member_address import MemberAddress
+from app.admin.models.member_bank_account import MemberBankAccount
 
 
 # this is the Alembic Config object, which provides

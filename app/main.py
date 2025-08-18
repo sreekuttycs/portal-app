@@ -6,6 +6,7 @@ from app.admin.routers import country
 from app.admin.routers import currency
 from app.admin.routers import member
 from app.admin.routers import member_address
+from app.admin.routers import member_bank_account
 
 
 app = FastAPI()
@@ -17,6 +18,7 @@ app.include_router(country.router, prefix="/countries", tags=["Countries"])
 app.include_router(currency.router, prefix="/currencies", tags=["Currencies"])
 app.include_router(member.router, prefix="/members", tags=["Members"])
 app.include_router(member_address.router, prefix="/member_address", tags=["Member Address"])
+app.include_router(member_bank_account.router, prefix="/member_bank_account", tags=["Member Bank Account"])
 
 @app.get("/")
 def root():
