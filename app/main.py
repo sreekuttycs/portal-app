@@ -7,6 +7,9 @@ from app.admin.routers import currency
 from app.admin.routers import member
 from app.admin.routers import member_address
 from app.admin.routers import member_bank_account
+from app.admin.routers import service_group
+from app.admin.routers import service_category
+
 
 
 app = FastAPI()
@@ -17,8 +20,11 @@ app.include_router(member_role.router, prefix="/member-roles", tags=["Member Rol
 app.include_router(country.router, prefix="/countries", tags=["Countries"])
 app.include_router(currency.router, prefix="/currencies", tags=["Currencies"])
 app.include_router(member.router, prefix="/members", tags=["Members"])
-app.include_router(member_address.router, prefix="/member_address", tags=["Member Address"])
-app.include_router(member_bank_account.router, prefix="/member_bank_account", tags=["Member Bank Account"])
+app.include_router(member_address.router, prefix="/member-address", tags=["Member Address"])
+app.include_router(member_bank_account.router, prefix="/member-bank_account", tags=["Member Bank Account"])
+app.include_router(service_group.router, prefix="/service-group", tags=["Service Group"])
+app.include_router(service_category.router, prefix="/service-category", tags=["Service Category"])
+
 
 @app.get("/")
 def root():

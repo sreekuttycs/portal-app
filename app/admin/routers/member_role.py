@@ -6,10 +6,7 @@ from app.admin.schemas.member_role import (
     MemberRoleCreate, MemberRoleUpdate, MemberRoleOut
 )
 
-router = APIRouter(
-    prefix="/admin/member-roles",
-    tags=["Member Roles"]
-)
+router = APIRouter()
 
 def get_db():
     db = SessionLocal()

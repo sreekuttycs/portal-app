@@ -4,10 +4,7 @@ from app.database import SessionLocal
 from app.admin.models.currency import Currency
 from app.admin.schemas.currency import CurrencyCreate, CurrencyUpdate, CurrencyOut
 
-router = APIRouter(
-    prefix="/admin/currencies",
-    tags=["Currencies"]
-)
+router = APIRouter()
 
 def get_db():
     db = SessionLocal()

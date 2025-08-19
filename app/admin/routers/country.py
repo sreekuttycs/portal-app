@@ -4,10 +4,8 @@ from app.database import SessionLocal
 from app.admin.models.country import Country
 from app.admin.schemas.country import CountryCreate, CountryUpdate, CountryOut
 
-router = APIRouter(
-    prefix="/admin/countries",
-    tags=["Countries"]
-)
+router = APIRouter()
+    
 
 def get_db():
     db = SessionLocal()

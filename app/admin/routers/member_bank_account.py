@@ -9,7 +9,7 @@ from app.admin.schemas.member_bank_account import (
     MemberBankAccountOut,
 )
 
-router = APIRouter(prefix="/bank-accounts")
+router = APIRouter()
 
 def get_db():
     db = SessionLocal()

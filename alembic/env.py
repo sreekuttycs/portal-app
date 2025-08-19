@@ -14,6 +14,10 @@ from app.admin.models.currency import Currency
 from app.admin.models.member import Member
 from app.admin.models.member_address import MemberAddress
 from app.admin.models.member_bank_account import MemberBankAccount
+from app.admin.models.service_group import ServiceGroup
+from app.admin.models.service_category import ServiceCategory
+
+
 
 
 # this is the Alembic Config object, which provides

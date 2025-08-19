@@ -4,7 +4,7 @@ from app.database import SessionLocal
 from app.admin.models.member import Member
 from app.admin.schemas.member import MemberCreate, MemberUpdate, MemberOut
 
-router = APIRouter(prefix="/members", tags=["Members"])
+router = APIRouter()
 
 
 # Dependency to get DB session

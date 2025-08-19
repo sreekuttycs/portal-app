@@ -6,10 +6,7 @@ from app.admin.schemas.member_type import (
     MemberTypeCreate, MemberTypeUpdate, MemberTypeOut
 )
 
-router = APIRouter(
-    prefix="/admin/member-types",
-    tags=["Member Types"]
-)
+router = APIRouter()
 
 def get_db():
     db = SessionLocal()
