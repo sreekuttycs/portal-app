@@ -11,6 +11,9 @@ class CountryUpdate(BaseModel):
     name: str | None = None
     code: str | None = None
 
+class CountryIDRequest(BaseModel):
+    country_id: int    
+
 class CountryOut(CountryBase):
     id: int
 

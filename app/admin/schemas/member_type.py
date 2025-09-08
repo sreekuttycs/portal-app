@@ -1,22 +1,30 @@
-from pydantic import BaseModel, constr
+from pydantic import BaseModel
+from datetime import datetime
+from typing import Optional
 
-# Shared properties
+
 class MemberTypeBase(BaseModel):
-    slug: constr(strip_whitespace=True, min_length=1)
-    label: constr(strip_whitespace=True, min_length=1)
+    slug: str
+    label: str
 
-# For creating a new member type
+
 class MemberTypeCreate(MemberTypeBase):
     pass
 
-# For updating an existing member type
-class MemberTypeUpdate(BaseModel):
-    slug: str | None = None
-    label: str | None = None
 
-# For returning member type from DB
+class MemberTypeUpdate(MemberTypeBase):
+    id: int   # required for update
+
+
 class MemberTypeOut(MemberTypeBase):
     id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
 
     class Config:
         orm_mode = True
+
+
+# for details/delete
+class MemberTypeIdRequest(BaseModel):
+    id: int

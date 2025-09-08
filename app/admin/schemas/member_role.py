@@ -1,22 +1,28 @@
-from pydantic import BaseModel, constr
+from pydantic import BaseModel
+from datetime import datetime
+from typing import Optional
 
-# Shared fields
+
 class MemberRoleBase(BaseModel):
-    slug: constr(strip_whitespace=True, min_length=1)
-    label: constr(strip_whitespace=True, min_length=1)
+    slug: str
+    label: str
 
-# For creating
+
 class MemberRoleCreate(MemberRoleBase):
     pass
 
-# For updating
-class MemberRoleUpdate(BaseModel):
-    slug: str | None = None
-    label: str | None = None
 
-# For returning to client
+class MemberRoleUpdate(MemberRoleBase):
+    id: int   # required for update
+
+
 class MemberRoleOut(MemberRoleBase):
     id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
 
     class Config:
         orm_mode = True
+
+class MemberRoleIdRequest(BaseModel):
+    id: int

@@ -3,10 +3,14 @@ from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.admin.models.member_role import MemberRole
 from app.admin.schemas.member_role import (
-    MemberRoleCreate, MemberRoleUpdate, MemberRoleOut
+    MemberRoleCreate,
+    MemberRoleUpdate,
+    MemberRoleOut,
+    MemberRoleIdRequest
 )
 
 router = APIRouter()
+
 
 def get_db():
     db = SessionLocal()
@@ -15,8 +19,13 @@ def get_db():
     finally:
         db.close()
 
-# Create
-@router.post("/", response_model=MemberRoleOut)
+
+@router.get("/list", response_model=list[MemberRoleOut])
+def list_member_roles(db: Session = Depends(get_db)):
+    return db.query(MemberRole).all()
+
+
+@router.post("/create", response_model=MemberRoleOut)
 def create_member_role(data: MemberRoleCreate, db: Session = Depends(get_db)):
     existing = db.query(MemberRole).filter(MemberRole.slug == data.slug).first()
     if existing:
@@ -27,23 +36,18 @@ def create_member_role(data: MemberRoleCreate, db: Session = Depends(get_db)):
     db.refresh(new_role)
     return new_role
 
-# List all
-@router.get("/", response_model=list[MemberRoleOut])
-def list_member_roles(db: Session = Depends(get_db)):
-    return db.query(MemberRole).all()
 
-# Get one
-@router.get("/{role_id}", response_model=MemberRoleOut)
-def get_member_role(role_id: int, db: Session = Depends(get_db)):
-    role = db.query(MemberRole).get(role_id)
+@router.post("/details", response_model=MemberRoleOut)
+def get_member_role(data: MemberRoleIdRequest, db: Session = Depends(get_db)):
+    role = db.query(MemberRole).filter(MemberRole.id == data.id).first()
     if not role:
         raise HTTPException(status_code=404, detail="Role not found")
     return role
 
-# Update
-@router.put("/{role_id}", response_model=MemberRoleOut)
-def update_member_role(role_id: int, data: MemberRoleUpdate, db: Session = Depends(get_db)):
-    role = db.query(MemberRole).get(role_id)
+
+@router.post("/update", response_model=MemberRoleOut)
+def update_member_role(data: MemberRoleUpdate, db: Session = Depends(get_db)):
+    role = db.query(MemberRole).filter(MemberRole.id == data.id).first()
     if not role:
         raise HTTPException(status_code=404, detail="Role not found")
 
@@ -54,13 +58,13 @@ def update_member_role(role_id: int, data: MemberRoleUpdate, db: Session = Depen
     db.refresh(role)
     return role
 
-# Delete
-@router.delete("/{role_id}", status_code=204)
-def delete_member_role(role_id: int, db: Session = Depends(get_db)):
-    role = db.query(MemberRole).get(role_id)
+
+@router.delete("/delete")
+def delete_member_role(data: MemberRoleIdRequest, db: Session = Depends(get_db)):
+    role = db.query(MemberRole).filter(MemberRole.id == data.id).first()
     if not role:
         raise HTTPException(status_code=404, detail="Role not found")
 
     db.delete(role)
     db.commit()
-    return
+    return {"message": "Member role deleted successfully"}

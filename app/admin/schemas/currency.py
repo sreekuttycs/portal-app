@@ -16,5 +16,8 @@ class CurrencyUpdate(BaseModel):
 class CurrencyOut(CurrencyBase):
     id: int
 
+class CurrencyIDRequest(BaseModel):
+    currency_id: int    
+
     class Config:
         orm_mode = True
