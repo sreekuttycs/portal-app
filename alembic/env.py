@@ -16,9 +16,10 @@ from app.admin.models.member_address import MemberAddress
 from app.admin.models.member_bank_account import MemberBankAccount
 from app.admin.models.service_group import ServiceGroup
 from app.admin.models.service_category import ServiceCategory
-
-
-
+from app.admin.models.service import Service
+from app.admin.models.plan import Plan
+from app.admin.models.plan_pricing import PlanPricing
+from app.customer.models.subscription import Subscription
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -23,5 +23,6 @@ class Member(Base):
     member_type = relationship("MemberType", back_populates="members")
     addresses = relationship("MemberAddress", back_populates="member")
     bank_accounts = relationship("MemberBankAccount", back_populates="member")
+    subscriptions = relationship("Subscription", back_populates="member")
 
 
