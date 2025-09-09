@@ -1,8 +1,8 @@
 """init schema
 
-Revision ID: c43046f42f80
+Revision ID: b0a9b8536028
 Revises: 
-Create Date: 2025-08-28 15:54:17.087539
+Create Date: 2025-09-08 18:53:55.251341
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision: str = 'c43046f42f80'
+revision: str = 'b0a9b8536028'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -137,6 +137,18 @@ def upgrade() -> None:
     op.create_index(op.f('ix_projects_id'), 'projects', ['id'], unique=False)
     op.create_index(op.f('ix_projects_project_status_id'), 'projects', ['project_status_id'], unique=False)
     op.create_index(op.f('ix_projects_slug'), 'projects', ['slug'], unique=False)
+    op.create_table('services',
+    sa.Column('id', mysql.INTEGER(unsigned=True), nullable=False),
+    sa.Column('service_group_id', mysql.INTEGER(unsigned=True), nullable=False),
+    sa.Column('service_category_id', mysql.INTEGER(unsigned=True), nullable=False),
+    sa.Column('specifications', sa.String(length=255), nullable=True),
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
+    sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
+    sa.ForeignKeyConstraint(['service_category_id'], ['service_categories.id'], ),
+    sa.ForeignKeyConstraint(['service_group_id'], ['service_groups.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_services_id'), 'services', ['id'], unique=False)
     op.create_table('user_email_verifications',
     sa.Column('id', mysql.INTEGER(unsigned=True), autoincrement=True, nullable=False),
     sa.Column('user_id', mysql.INTEGER(unsigned=True), nullable=False),
@@ -181,6 +193,18 @@ def upgrade() -> None:
     )
     op.create_index(op.f('ix_member_bank_accounts_id'), 'member_bank_accounts', ['id'], unique=False)
     op.create_index(op.f('ix_member_bank_accounts_member_id'), 'member_bank_accounts', ['member_id'], unique=False)
+    op.create_table('plans',
+    sa.Column('id', mysql.INTEGER(unsigned=True), nullable=False),
+    sa.Column('service_id', mysql.INTEGER(unsigned=True), nullable=False),
+    sa.Column('slug', sa.String(length=255), nullable=False),
+    sa.Column('label', sa.String(length=255), nullable=False),
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['service_id'], ['services.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('slug')
+    )
+    op.create_index(op.f('ix_plans_id'), 'plans', ['id'], unique=False)
     op.create_table('project_members',
     sa.Column('id', mysql.INTEGER(unsigned=True), autoincrement=True, nullable=False),
     sa.Column('project_id', mysql.INTEGER(unsigned=True), nullable=False),
@@ -195,22 +219,64 @@ def upgrade() -> None:
     op.create_index(op.f('ix_project_members_member_id'), 'project_members', ['member_id'], unique=False)
     op.create_index(op.f('ix_project_members_member_role_id'), 'project_members', ['member_role_id'], unique=False)
     op.create_index(op.f('ix_project_members_project_id'), 'project_members', ['project_id'], unique=False)
+    op.create_table('plan_pricing',
+    sa.Column('id', mysql.INTEGER(unsigned=True), nullable=False),
+    sa.Column('plan_id', mysql.INTEGER(unsigned=True), nullable=False),
+    sa.Column('currency_id', mysql.INTEGER(unsigned=True), nullable=False),
+    sa.Column('amount', sa.Numeric(precision=10, scale=2), nullable=False),
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['currency_id'], ['currencies.id'], ),
+    sa.ForeignKeyConstraint(['plan_id'], ['plans.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_plan_pricing_id'), 'plan_pricing', ['id'], unique=False)
+    op.create_table('subscriptions',
+    sa.Column('id', mysql.INTEGER(unsigned=True), autoincrement=True, nullable=False),
+    sa.Column('plan_id', mysql.INTEGER(unsigned=True), nullable=False),
+    sa.Column('payment_mode_id', mysql.TINYINT(unsigned=True), nullable=False, comment='1 = Online, 2 = Offline'),
+    sa.Column('member_id', mysql.INTEGER(unsigned=True), nullable=False),
+    sa.Column('amount', sa.Numeric(precision=9, scale=2), nullable=False),
+    sa.Column('start_date', sa.Date(), nullable=False),
+    sa.Column('locking_period', sa.String(length=255), nullable=False),
+    sa.Column('bill_due_date', sa.Date(), nullable=True),
+    sa.Column('is_paid', sa.Boolean(), server_default=sa.text('0'), nullable=False),
+    sa.Column('status', mysql.TINYINT(unsigned=True), server_default=sa.text('1'), nullable=False),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['member_id'], ['members.id'], ),
+    sa.ForeignKeyConstraint(['plan_id'], ['plans.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_subscriptions_id'), 'subscriptions', ['id'], unique=False)
+    op.create_index(op.f('ix_subscriptions_payment_mode_id'), 'subscriptions', ['payment_mode_id'], unique=False)
+    op.create_index(op.f('ix_subscriptions_plan_id'), 'subscriptions', ['plan_id'], unique=False)
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     """Downgrade schema."""
     # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_index(op.f('ix_subscriptions_plan_id'), table_name='subscriptions')
+    op.drop_index(op.f('ix_subscriptions_payment_mode_id'), table_name='subscriptions')
+    op.drop_index(op.f('ix_subscriptions_id'), table_name='subscriptions')
+    op.drop_table('subscriptions')
+    op.drop_index(op.f('ix_plan_pricing_id'), table_name='plan_pricing')
+    op.drop_table('plan_pricing')
     op.drop_index(op.f('ix_project_members_project_id'), table_name='project_members')
     op.drop_index(op.f('ix_project_members_member_role_id'), table_name='project_members')
     op.drop_index(op.f('ix_project_members_member_id'), table_name='project_members')
     op.drop_table('project_members')
+    op.drop_index(op.f('ix_plans_id'), table_name='plans')
+    op.drop_table('plans')
     op.drop_index(op.f('ix_member_bank_accounts_member_id'), table_name='member_bank_accounts')
     op.drop_index(op.f('ix_member_bank_accounts_id'), table_name='member_bank_accounts')
     op.drop_table('member_bank_accounts')
     op.drop_table('member_addresses')
     op.drop_index(op.f('ix_user_email_verifications_user_id'), table_name='user_email_verifications')
     op.drop_table('user_email_verifications')
+    op.drop_index(op.f('ix_services_id'), table_name='services')
+    op.drop_table('services')
     op.drop_index(op.f('ix_projects_slug'), table_name='projects')
     op.drop_index(op.f('ix_projects_project_status_id'), table_name='projects')
     op.drop_index(op.f('ix_projects_id'), table_name='projects')
