@@ -6,7 +6,12 @@ from sqlalchemy import pool
 from alembic import context
 
 from app.database import Base
-from app.admin.models.user import User
+
+
+from app.customer.models.user import User
+from app.customer.models.user_email_verification import UserEmailVerification
+
+
 from app.admin.models.member_type import MemberType
 from app.admin.models.member_role import MemberRole
 from app.admin.models.country import Country
@@ -16,21 +21,18 @@ from app.admin.models.member_address import MemberAddress
 from app.admin.models.member_bank_account import MemberBankAccount
 from app.admin.models.service_group import ServiceGroup
 from app.admin.models.service_category import ServiceCategory
-<<<<<<< Updated upstream
 from app.admin.models.service import Service
 from app.admin.models.plan import Plan
 from app.admin.models.plan_pricing import PlanPricing
 from app.customer.models.subscription import Subscription
-=======
 from app.admin.models.business_account import BusinessAccount
 from app.admin.models.project_status import ProjectStatus
 from app.admin.models.project import Project
 from app.admin.models.project_member import ProjectMember
-from app.admin.models.user_email_verification import UserEmailVerification
 
 
 
->>>>>>> Stashed changes
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
