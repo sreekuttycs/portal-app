@@ -1,11 +1,16 @@
 import requests
 from jinja2 import Environment, FileSystemLoader
+from dotenv import load_dotenv
 import os
-# from dotenv import load_dotenv
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+load_dotenv(BASE_DIR / ".env")
 
 MAILGUN_API_KEY = os.getenv("MAILGUN_API_KEY")
 MAILGUN_DOMAIN = os.getenv("MAILGUN_DOMAIN")
 MAILGUN_FROM_EMAIL = os.getenv("MAILGUN_FROM_EMAIL")
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, "templates", "customer")
