@@ -7,8 +7,8 @@ MAILGUN_API_KEY = os.getenv("MAILGUN_API_KEY")
 MAILGUN_DOMAIN = os.getenv("MAILGUN_DOMAIN")
 MAILGUN_FROM_EMAIL = os.getenv("MAILGUN_FROM_EMAIL")
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # points to .../app/admin
-TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TEMPLATE_DIR = os.path.join(BASE_DIR, "templates", "customer")
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 

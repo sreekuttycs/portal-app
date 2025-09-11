@@ -18,8 +18,8 @@ class MemberTypeUpdate(MemberTypeBase):
 
 class MemberTypeOut(MemberTypeBase):
     id: int
-    created_at: datetime
-    updated_at: Optional[datetime] = None
+    slug: str
+    label: str
 
     class Config:
         orm_mode = True

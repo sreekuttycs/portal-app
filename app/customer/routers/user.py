@@ -9,7 +9,7 @@ from passlib.context import CryptContext
 from app.customer.schemas.user_email_verification import UserEmailVerificationOut
 from datetime import datetime, timedelta
 import uuid
-from app.customer.utils.email_service import send_verification_email, send_password_reset_email
+from app.utils.email_service import send_verification_email, send_password_reset_email
 
 router = APIRouter()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

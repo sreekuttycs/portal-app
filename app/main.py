@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.customer.routers import user
 from app.customer.routers import subscription
+from app.customer.routers import auth
 
 
 from app.admin.routers import member_type
@@ -32,6 +33,7 @@ load_dotenv(BASE_DIR / ".env")
 
 app = FastAPI()
 
+app.include_router(auth.router, prefix="/login", tags=["Login"])
 app.include_router(user.router, prefix="/users", tags=["Users"])
 app.include_router(member_type.router, prefix="/member-types", tags=["Member Types"])
 app.include_router(member_role.router, prefix="/member-roles", tags=["Member Roles"])
